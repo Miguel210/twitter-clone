@@ -45,11 +45,11 @@ pub async fn get_likes_by_tweet(_path: Path<(String,)>) -> HttpResponse {
 pub async fn like_tweet(path: Path<(String,)>,pool: Data<Pool<ConnectionManager::<PgConnection>>>) -> HttpResponse {
     use crate::schema::likes::dsl::*;
 
-    let  t_id = &path.0.0;//&path.0.0
+    let  t_id = &path.0;//&path.0.0
     let mut conn = pool.get().expect("No se pudo conectar a la BD");
 
     let like = Like::new(Uuid::from_str(t_id).unwrap());
-    let result = diesel::insert_into(likes::table).values(&like).execute(&mut conn).unwrap();
+    let result = diesel::insert_into(likes).values(&like).execute(&mut conn).unwrap();
 
     HttpResponse::Created()
     .content_type(APPLICATION_JSON)
